@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grupul Smekerilor</title>
+    <style>
+        :root {
+            --primary: #6e45e2;
+            --secondary: #88d3ce;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --light: #f8f9fa;
+            --accent: #ff4d4d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(110, 69, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(136, 211, 206, 0.1) 0%, transparent 50%);
+        }
+        
+        header {
+            background-color: rgba(10, 10, 10, 0.8);
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .member-card {
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+        
+        .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(110, 69, 226, 0.3);
+        }
+        
+        .member-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .member-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            padding: 1rem;
+            color: white;
+            font-size: 1.4rem;
+        }
+        
+        .member-about {
+            padding: 1.5rem;
+        }
+        
+        .member-about p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        .category-title {
+            font-size: 2rem;
+            margin: 3rem 0 1.5rem;
+            color: var(--light);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .category-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            border-radius: 3px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+            background-color: rgba(10, 10, 10, 0.8);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Member Profile Page Styles */
+        .profile-page {
+            display: none;
+            padding: 2rem 0;
+        }
+        
+        .profile-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--primary);
+            margin: 0 auto 1.5rem;
+            display: block;
+        }
+        
+        .profile-name {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .profile-title {
+            color: var(--secondary);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .profile-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(30, 30, 30, 0.7);
+            border-radius: 12px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .profile-section {
+            margin-bottom: 2rem;
+        }
+        
+        .profile-section h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .profile-section p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        .back-button {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 2rem;
+            transition: background 0.3s;
+        }
+        
+        .back-button:hover {
+            background: #5d35c7;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .members-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-name {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Page -->
+    <div id="main-page">
+        <header>
+            <h1>Grupul Smekerilor</h1>
+            <p class="subtitle">Cele mai tari persoane din univers</p>
+        </header>
+        
+        <div class="container">
+            <h2 class="category-title">Membrii Grupului</h2>
+            <div class="members-grid">
+                <!-- Membru 1 -->
+                <div class="member-card" onclick="showProfile('marius')">
+                    <div class="member-image" style="background-image: url('https://media.discordapp.net/attachments/1353854390955409460/1355220698800586782/71C458C2-1FD7-40C0-93DA-F0B61272B6A1.jpg?ex=67e82321&is=67e6d1a1&hm=34f97706b642fa2b7a1b25b91e7ef26b5c91d840329839230dca4b2f9dbc5900&=&format=webp&width=794&height=800');">
+                        <div class="member-name">Stefan</div>
+                    </div>
+                    <div class="member-about">
+                        <p>180 king (168) rizz master care nu iese din casa; fondatorul sitelui.</p>
+                    </div>
+                </div>
+                
+                <!-- Membru 2 -->
+                <div class="member-card" onclick="showProfile('alex')">
+                    <div class="member-image" style="background-image: url('https://cdn.discordapp.com/attachments/1353854390955409460/1355225168871555072/IMG_0125.png?ex=67e8274b&is=67e6d5cb&hm=3d9e24ba26100eaf704a77c9a1d902cb10086aa22aef4a97dfd16dc0340c0b49&');">
+                        <div class="member-name">Edi</div>
+                    </div>
+                    <div class="member-about">
+                        <p>Reprezentator auto Porsche; Fondatorul siteului.</p>
+                    </div>
+                </div>
+                
+                <!-- Membru 3 -->
+                <div class="member-card" onclick="showProfile('andrei')">
+                    <div class="member-image" style="background-image: url('https://cdn.discordapp.com/attachments/1353854390955409460/1355227669666598942/IMG_20250115_083612_306.png?ex=67e8299f&is=67e6d81f&hm=f34d683c194e7e0a4dd6267b117532d61dc1dfbfbc37c123e97b35f5ab9ebe3b&');">
+                        <div class="member-name">Stefi</div>
+                    </div>
+                    <div class="member-about">
+                        <p>Ofticata grupului (ea beta, noi suntem sigma) .</p>
+                    </div>
+                </div>
+                
+                <!-- Membru 4 -->
+                <div class="member-card" onclick="showProfile('cristi')">
+                    <div class="member-image" style="background-image: url('https://media.discordapp.net/attachments/1353854390955409460/1355231593110966433/image.png?ex=67e82d46&is=67e6dbc6&hm=13d0563101b6fe99cdc2f62d9949ff2f2ed9946fc6b5a1c2003a8712c496bb62&=&format=webp&quality=lossless&width=1149&height=513');">
+                        <div class="member-name">Darie</div>
+                    </div>
+                    <div class="member-about">
+                        <p>Elev la colegiul Pedagogic; producator beaturi</p>
+                    </div>
+                </div>
+                
+                <!-- Membru 5 -->
+                <div class="member-card" onclick="showProfile('dani')">
+                    <div class="member-image" style="background-image: url('https://i.imgur.com/VvJmh3F.jpg');">
+                        <div class="member-name">Dani</div>
+                    </div>
+                    <div class="member-about">
+                        <p>Gamer-ul profesionist. Dacă nu e cu voi, sigur e în vreun joc online.</p>
+                    </div>
+                </div>
+                
+                <!-- Membru 6 -->
+                <div class="member-card" onclick="showProfile('eduard')">
+                    <div class="member-image" style="background-image: url('https://i.imgur.com/7kQ2B9x.jpg');">
+                        <div class="member-name">Eduard</div>
+                    </div>
+                    <div class="member-about">
+                        <p>Muzicianul grupului. Cântă la chitară și știe toate piesele.</p>
+                    </div>
+                </div>
+                
+                <!-- Membru 7 -->
+                <div class="member-card" onclick="showProfile('florin')">
+                    <div class="member-image" style="background-image: url('https://i.imgur.com/5tK7w9j.jpg');">
+                        <div class="member-name">Florin</div>
+                    </div>
+                    <div class="member-about">
+                        <p>Băiatul deștept. Rezolvă orice problemă de matematică rapid.</p>
+                    </div>
+                </div>
+                
+                <!-- Membru 8 -->
+                <div class="member-card" onclick="showProfile('george')">
+                    <div class="member-image" style="background-image: url('https://i.imgur.com/3rQsZ8N.jpg');">
+                        <div class="member-name">George</div>
+                    </div>
+                    <div class="member-about">
+                        <p>Bucătarul grupului. Știe toate locurile bune de mâncat din oraș.</p>
+                    </div>
+                </div>
+                
+                <!-- Membru 9 -->
+                <div class="member-card" onclick="showProfile('horia')">
+                    <div class="member-image" style="background-image: url('https://i.imgur.com/XyzAbC1.jpg');">
+                        <div class="member-name">Horia</div>
+                    </div>
+                    <div class="member-about">
+                        <p>Cel mai calm din grup. Echilibrează energia tuturor.</p>
+                    </div>
+                </div>
+                
+                <!-- Membru 10 -->
+                <div class="member-card" onclick="showProfile('ionut')">
+                    <div class="member-image" style="background-image: url('https://i.imgur.com/QwErTfG.jpg');">
+                        <div class="member-name">Ionuț</div>
+                    </div>
+                    <div class="member-about">
+                        <p>Maestrul memeurilor. Trimite cele mai tari meme-uri la orice oră.</p>
+                    </div>
+                </div>
+                
+                <!-- Adaugă aici restul membrilor până la 20 -->
+                <!-- ... -->
+                
+                <!-- Membru 20 -->
+                <div class="member-card" onclick="showProfile('vlad')">
+                    <div class="member-image" style="background-image: url('https://i.imgur.com/XwZq8JG.jpg');">
+                        <div class="member-name">Vlad</div>
+                    </div>
+                    <div class="member-about">
+                        <p>Cel care întotdeauna are planuri. Fără el, am fi toți acasă.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Grupul Smekerilor. Toate drepturile rezervate.</p>
+            <p style="margin-top: 0.5rem; color: #888;">Creat cu ♥ pentru cei mai buni prieteni</p>
+        </footer>
+    </div>
+    
+    <!-- Profile Pages -->
+    <!-- Profile Template - Duplicate and modify for each member -->
+    <div id="marius-profile" class="profile-page">
+        <div class="container">
+            <div class="profile-header">
+                <img src="https://media.discordapp.net/attachments/1353854390955409460/1355220698485887077/73470DF7-785F-44F9-BD56-C0139D42C56B.jpg?ex=67e82321&is=67e6d1a1&hm=e1c3eec15270bbcb1637ffd3a63add02dcc3cc6119b898d607bdd71a199776c9&=&format=webp&width=600&height=800" alt="STEFAN" class="profile-image">
+                <h2 class="profile-name">Stefan</h2>
+                <p class="profile-title">Regele micut</p>
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-section">
+                    <h3>Despre mine</h3>
+                    <p>
+
+                        Vârsta: 16 ani |
+                        
+                        Înălțimea: 167 cm |
+                        
+                        Greutatea: 74 kg |
+                        
+                        Îi plac Audiurile |
+                        Data nasterii: 29 dec 2008</p>
+                </div>
+                
+                <div class="profile-section">
+                    <h3>Statistici</h3>
+                    <p>• Scos din grup : 2 ori<br>
+                       • Oameni amuțiți de glumele mele: 99%<br>
+                       • Timp petrecut afara : 0m </p>
+                </div>
+                
+                <div class="profile-section">
+                    <h3>Superputere</h3>
+                    <p>Abilitatea de nu a face dus la 3 luni.</p>
+                </div>
+                
+                <a href="#" class="back-button" onclick="hideProfile()">Înapoi la grup</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Alex Profile -->
+    <div id="alex-profile" class="profile-page">
+        <div class="container">
+            <div class="profile-header">
+                <img src="https://i.imgur.com/LpYFQhU.jpg" alt="Edi" class="profile-image">
+                <h2 class="profile-name">Edi</h2>
+                <p class="profile-title">Organizatorul suprem</p>
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-section">
+                    <h3>Despre mine</h3>
+                    <p>Dacă există ceva de făcut, eu nu știu cum să-l facăm distractiv. De la petreceri până la excursii, sunt absent.</p>
+                </div>
+                
+                <div class="profile-section">
+                    <h3>Statistici</h3>
+                    <p>• Erori la cod: destule<br>
+                       • Barbati atinsi: 500+<br>
+                       • Interactiuni cu femei: 0+</p>
+                </div>
+                
+                <div class="profile-section">
+                    <h3>Superputere</h3>
+                    <p>Spawnez un porsche</p>
+                </div>
+                
+                <a href="#" class="back-button" onclick="hideProfile()">Înapoi la grup</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add profiles for all 20 members following the same pattern -->
+    
+    <div id="andrei-profile" class="profile-page">
+        <div class="container">
+            <div class="profile-header">
+                <img src="https://cdn.discordapp.com/attachments/1353854390955409460/1355227759563112719/486508143_545383425243099_1497087608723121284_n.png?ex=67e829b4&is=67e6d834&hm=65232842675471f16b8e80e9ebab9eb4eeeba18eaaad1749e78076161296a2d9&" alt="Edi" class="profile-image">
+                <h2 class="profile-name">Stefi</h2>
+                <p class="profile-title">Deficit de atentie</p>
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-section">
+                    <h3>Despre mine</h3>
+                    <img src="https://cdn.discordapp.com/attachments/1353854390955409460/1355228499908235634/IMG_8876.png?ex=67e82a65&is=67e6d8e5&hm=3e1d316d6e0aaefd025fb175df6e1f733f7f4068fd9e9c5ef52b9faef8355ea0&" width="300" style="border-radius: 30px;">
+                </div>
+                
+                <div class="profile-section">
+                    <h3>Statistici</h3>
+                    <p>• Persoane enervate: 100+<br>
+                       • Barbati atinsi: 0-<br>
+                       • Persoane care s-au omorat dupa conversatie cu ea: 0 (sper)</p>
+                </div>
+                
+                <div class="profile-section">
+                    <h3>Superputere</h3>
+                    <p>Enervarea persoanelor</p>
+                </div>
+                
+                <a href="#" class="back-button" onclick="hideProfile()">Înapoi la grup</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="cristi-profile" class="profile-page">
+        <div class="container">
+            <div class="profile-header">
+                <img src="https://cdn.discordapp.com/attachments/1353854390955409460/1355231913106735356/image.png?ex=67e82d93&is=67e6dc13&hm=2c498e91b65bd9c2c774afed2c9d5ea9a40abca7a3b0fd04b01c745a27183a13&" alt="Darie" class="profile-image">
+                <h2 class="profile-name">Darie</h2>
+                <p class="profile-title">Producerul</p>
+            </div>
+            
+            <div class="profile-content">
+                <div class="profile-section">
+                    <h3>Despre mine</h3>
+                    <p>Pirateaza pluginuri de pe FLstudio.</p>
+                </div>
+                
+                <div class="profile-section">
+                    <h3>Statistici</h3>
+                    <p>• Beaturi facute: 100+<br>
+                       • Ore in FLstudio: 239,160 <br>
+                       • Nume scena: Mirel Cascaval</p>
+                </div>
+                
+                <div class="profile-section">
+                    <h3>Superputere</h3>
+                    <p>Face beaturi cu Travis Scoteanu</p>
+                </div>
+                
+                <a href="#" class="back-button" onclick="hideProfile()">Înapoi la grup</a>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <script>
+        // Show member profile
+        function showProfile(memberId) {
+            document.getElementById('main-page').style.display = 'none';
+            document.getElementById(memberId + '-profile').style.display = 'block';
+        }
+        
+        // Hide profile and return to main page
+        function hideProfile() {
+            document.querySelectorAll('.profile-page').forEach(page => {
+                page.style.display = 'none';
+            });
+            document.getElementById('main-page').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+        
+        // You can add more JavaScript functionality here
+        // For example, to load member data dynamically
+        
+        // Initialize - hide all profile pages
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.profile-page').forEach(page => {
+                page.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
